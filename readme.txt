@@ -1,4 +1,4 @@
 Git is a version control system.
 Git is a free software.
 Git is a good project.
-add a new computer.
+add a new computer game.
