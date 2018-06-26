@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>SLOT内容分发插槽</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <h3>不具名插槽：</h3>
+  <div id="app">
+     <components><span>*</span>slot</components>
+  </div>
+  <script type="text/javascript">
+    Vue.component('components',{
+      template:`<a href="https:www.baidu.com">
+       <slot></slot>
+      </a>`
+    })
+    new Vue({
+      el:'#app'
+    })
+  </script>
+
+  <h3>具名插槽</h3>
+  <div id="app1">
+     <layout>
+       <template slot="header">
+         <h1>我是header</h1>
+       </template>
+       <template slot="main">
+         <h3>我是main</h3>
+       </template>
+       <template slot="footer">
+         <p>我是footer</p>
+       </template>
+     </layout>
+  </div>
+  <script type="text/javascript">
+     Vue.component('layout',{
+      template:`
+      <div class='container'>
+         <header>
+           <slot name='header'></slot>
+         </header>
+         <main>
+           <slot name="main"></slot>
+         </main>
+         <footer>
+           <slot name="footer"></slot>
+         </footer>
+      </div>
+      `
+     })
+     new Vue({
+      el:"#app1"
+     })
+  </script>
+
+  <h3>插槽的默认内容</h3>
+  <div id="app2">
+     <btn>aaa</btn>
+  </div>
+  <script type="text/javascript">
+    Vue.component('btn',{
+      template:`<button>
+      <slot>Submit</slot>
+      </button>`
+    })
+    new Vue({
+      el:"#app2"
+    })
+  </script>
+
+  <h3>编译作用域</h3>
+  <div id="app3">
+    <navigation-link url='/profile'>
+      你叫什么名字 {{ user.name }}
+    </navigation-link> 
+  </div>
+  <script type="text/javascript">
+    Vue.component('navigation-link',{
+      template:`<a href=''>
+        <slot></slot>
+      </a>`
+    })
+    new Vue({
+      el:"#app3",
+      data:{
+        user:{
+          name:'lyx'
+        }
+      }
+    })
+  </script>
+
+  <h3>作用域插槽</h3>
+  <div id="app4">
+    <child>
+      <template scope="a">
+        <span>hello from parent</span>
+        <span>{{ a.say }}</span>
+      </template>
+    </child>
+  </div>
+  <script type="text/javascript">
+    Vue.component('child',{
+      template:`
+       <div class='child'>
+         <slot say="hello form child"></slot>
+       </div>
+      `
+    })
+    new Vue({
+      el:'#app4'
+    })
+  </script>
+
+  <h3>作用域插槽应用</h3>
+  <div id="app5">
+      <jj-lin :infos="info">
+         <template slot="slot" slot-scope="a">
+             <li>{{a.thing}}</li>
+         </template>
+      </jj-lin>
+      <ul>
+        <li is="test" v-for="item in info" >
+          <template slot="test" slot-scope="b">
+            <span v-if="b.isComplete">~~~~(>_<)~~~~</span>
+             <span>{{ item.msg }}</span>
+          </template>
+         
+        </li>
+      </ul>
+  </div>
+  <script type="text/javascript">
+    Vue.component('jj-lin',{
+      props:['infos'],
+       template:`
+       <ul>
+           <slot
+           name="slot"
+           v-for='item in infos'
+           :thing="item.msg"
+           ></slot>
+       </ul>
+       `
+    })
+    Vue.component('test',{
+
+      template:`
+      <li>
+        <slot isComplete=true name="test"></slot>
+      </li>
+      `
+    })
+    new Vue({
+      el:"#app5",
+      data:{
+        info:[
+        {msg:'你好'},
+        {msg:'我是jj'},
+        {msg:'林俊杰'}
+        ]
+      }
+    })
+  </script>
+
+</body>
+</html>
